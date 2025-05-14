@@ -1,3 +1,15 @@
+// COMMENTO NORMALE
+// ! COMMENTO ERRORE
+// ? COMMENTO DOMANDA
+// * COMMENTO HIGHLIGHT
+// # COMMENTO WARNING
+// - COMMENTO TEXT
+// todo COMMENTO TODO
+
+
+
+
+
 // # EXPRESS (gestione richieste/risposte e middlewares - dependency)
 
 // - EXPRESS Import
@@ -15,7 +27,7 @@ const app = express();
 // # CUSTOM IMPORTS
 
 const { appPort } = require('./data/db');
-const postsRouter = require('./routers/posts');
+const { postsRouter } = require('./routers/posts');
 
 
 
