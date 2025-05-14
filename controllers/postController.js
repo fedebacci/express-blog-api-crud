@@ -19,20 +19,46 @@ let { posts } = require('../data/db');
 const index = (req, res) => {
 
     let { title, content, tags } = req.query
-    tags = tags.split(', ');
+    if (tags) tags = tags.split(', ');
 
-    console.log(`title`, title);
-    console.log(`typeof(title)`, typeof(title));
-    console.log(`content`, content);
-    console.log(`typeof(content)`, typeof(content));
-    console.log(`tags`, tags);
-    console.log(`typeof(tags)`, typeof(tags));
+    // console.log(`title`, title);
+    // console.log(`typeof(title)`, typeof(title));
+    // console.log(`content`, content);
+    // console.log(`typeof(content)`, typeof(content));
+    // console.log(`tags`, tags);
+    // console.log(`typeof(tags)`, typeof(tags));
 
+
+    let filteredPosts = [...posts];
+
+    if (title) {
+        filteredPosts = filteredPosts.filter(post => post.title.includes(title))
+    };
+
+    if (content) {
+        filteredPosts = filteredPosts.filter(post => post.content.includes(content))
+    };
+    
+    if (tags) {
+        tags.forEach(tag => {
+            filteredPosts = filteredPosts.filter(post => post.tags.includes(tag))
+        });
+    };
+
+    if (filteredPosts.length === 0) {
+        res
+            .status(404)
+            .json({
+                description: "I filtri utilizzati escludono tutti i post. Prova a modificare i filtri e riprova"
+            });
+
+        return;
+    }
 
     res.json({
-        success: true,
+        
         description: "Lista dei post",
-        posts
+        posts: filteredPosts
     });
 };
 
@@ -53,7 +79,7 @@ const show = (req, res) => {
     };
 
     res.json({
-        success: true,
+        
         description: `Visualizzazione dettagli del post ${id}`,
         posts
     });
@@ -63,7 +89,7 @@ const show = (req, res) => {
 
 const create = (req, res) => {
     res.json({
-        success: true,
+        
         description: `Creazione di un nuovo post`,
         posts
     });
@@ -87,7 +113,7 @@ const update = (req, res) => {
     };
 
     res.json({
-        success: true,
+        
         description: `Modifica totale del post ${id}`,
         posts
     });
@@ -111,7 +137,7 @@ const modify = (req, res) => {
     };
 
     res.json({
-        success: true,
+        
         description: `Modifica parziale del post ${id}`,
         posts
     });
@@ -137,12 +163,16 @@ const destroy = (req, res) => {
 
 
     posts = posts.filter(post => post.id !== id);
-    console.log("posts DOPO LA RIMOZIONE:", posts);
+    // console.log("posts DOPO LA RIMOZIONE:", posts);
 
     res
-        // * STATUS "OK (SENZA CONTENUTO)" perchè non ho contenuto da mostrare indietro
-        .status(204)
-        .send();
+        // // * STATUS "OK (SENZA CONTENUTO)" perchè non ho contenuto da mostrare indietro
+        // .status(204)
+        // .send();
+        .json({
+            description: "Cancellazione del post " + id + " riuscita",
+            posts
+        });
 };
 
 
