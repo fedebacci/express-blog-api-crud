@@ -20,6 +20,7 @@ const index = (req, res) => {
 
     let { title, content, tags, filterAll } = req.query
     if (tags) tags = tags.split(', ');
+    filterAll = filterAll === "false" ? false : true;
 
     // console.log(`title`, title);
     // console.log(`typeof(title)`, typeof(title));
@@ -33,8 +34,18 @@ const index = (req, res) => {
 
     let filteredPosts = [...posts];
 
-    if (filterAll === "false") {
-        filteredPosts = filteredPosts.filter(post => post.title.includes(title) || filteredPosts.filter(post => post.content.includes(content)) || filteredPosts.filter(post => post.tags.includes(tag)));
+    if (filterAll === false) {
+        filteredPosts = [];
+        posts.forEach(post => {
+            let containsTags = false;
+            tags?.forEach(tag => {
+                if (post.tags.includes(tag)) containsTags = true;
+            });
+            
+            if (post.title?.includes(title) || post.content?.includes(content) || containsTags === true) {
+                filteredPosts.push(post);
+            };
+        })
     } else {
         if (title) {
             filteredPosts = filteredPosts.filter(post => post.title.includes(title));
