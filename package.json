@@ -1,0 +1,28 @@
+{
+  "name": "express-blog-intro",
+  "version": "1.0.0",
+  "description": "Esercizio, Boolean, Blog",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "node --watch app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fedebacci/express-blog-intro.git"
+  },
+  "keywords": [
+    "Esercizio",
+    "Boolean",
+    "Blog"
+  ],
+  "author": "Federico Bacci",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/fedebacci/express-blog-intro/issues"
+  },
+  "homepage": "https://github.com/fedebacci/express-blog-intro#readme",
+  "dependencies": {
+    "express": "^5.1.0"
+  }
+}
