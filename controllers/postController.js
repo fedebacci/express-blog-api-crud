@@ -18,7 +18,7 @@ let { posts } = require('../data/db');
 
 const index = (req, res) => {
 
-    let { title, content, tags } = req.query
+    let { title, content, tags, filterAll } = req.query
     if (tags) tags = tags.split(', ');
 
     // console.log(`title`, title);
@@ -27,22 +27,28 @@ const index = (req, res) => {
     // console.log(`typeof(content)`, typeof(content));
     // console.log(`tags`, tags);
     // console.log(`typeof(tags)`, typeof(tags));
+    // console.log(`filterAll`, filterAll);
+    // console.log(`typeof(filterAll)`, typeof(filterAll));
 
 
     let filteredPosts = [...posts];
 
-    if (title) {
-        filteredPosts = filteredPosts.filter(post => post.title.includes(title))
-    };
-
-    if (content) {
-        filteredPosts = filteredPosts.filter(post => post.content.includes(content))
-    };
+    if (filterAll === "false") {
+        filteredPosts = filteredPosts.filter(post => post.title.includes(title) || filteredPosts.filter(post => post.content.includes(content)) || filteredPosts.filter(post => post.tags.includes(tag)));
+    } else {
+        if (title) {
+            filteredPosts = filteredPosts.filter(post => post.title.includes(title));
+        };
     
-    if (tags) {
-        tags.forEach(tag => {
-            filteredPosts = filteredPosts.filter(post => post.tags.includes(tag))
-        });
+        if (content) {
+            filteredPosts = filteredPosts.filter(post => post.content.includes(content));
+        };
+        
+        if (tags) {
+            tags.forEach(tag => {
+                filteredPosts = filteredPosts.filter(post => post.tags.includes(tag));
+            });
+        };
     };
 
     if (filteredPosts.length === 0) {
