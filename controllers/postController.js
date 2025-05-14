@@ -11,15 +11,12 @@
 
 
 let { posts } = require('../data/db');
-// console.log(posts);
 
 
 
 
 
 const index = (req, res) => {
-    // res.send("Lista dei post");
-
     res.json({
         success: true,
         description: "Lista dei post",
@@ -31,11 +28,6 @@ const index = (req, res) => {
 
 const show = (req, res) => {
     const id = parseInt(req.params.id);
-    // res.send(`Visualizzazione dettagli del post ${id}`);
-
-
-
-
     const post = posts.find(post => post.id === id);
     
     if (post) {
@@ -56,8 +48,6 @@ const show = (req, res) => {
 
 
 const create = (req, res) => {
-    // res.send(`Creazione di un nuovo post`);
-
     res.json({
         success: true,
         description: `Creazione di un nuovo post`,
@@ -70,13 +60,7 @@ const create = (req, res) => {
 
 const update = (req, res) => {
     const id = parseInt(req.params.id);
-    // res.send(`Modifica totale del post ${id}`);
-
-
-
-
     const post = posts.find(post => post.id === id);
-
 
     if (post) {
         res.json({
@@ -98,10 +82,6 @@ const update = (req, res) => {
 
 const modify = (req, res) => {
     const id = parseInt(req.params.id);
-    // res.send(`Modifica parziale del post ${id}`);
-
-
-
     const post = posts.find(post => post.id === id);
 
     if (post) {
@@ -124,19 +104,15 @@ const modify = (req, res) => {
 
 const destroy = (req, res) => {
     const id = parseInt(req.params.id);
-    // res.send(`Cancellazione del post ${id}`);
 
     if (posts.find(post => post.id === id)) {
         posts = posts.filter(post => post.id !== id);
+        console.log("posts DOPO LA RIMOZIONE:", posts);
 
         res
             // * STATUS "OK (SENZA CONTENUTO)" perchè non ho contenuto da mostrare indietro
-            // .status(204)
-            .json({
-                success: true,
-                description: `Cancellazione del post ${id}`,
-                posts
-            });
+            .status(204)
+            .send();
     } else {
         res
             .status(404)
