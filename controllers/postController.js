@@ -18,18 +18,11 @@ let { posts } = require('../data/db');
 
 const index = (req, res) => {
 
+    
     let { title, content, tags, filterAll } = req.query
     if (tags) tags = tags.split(', ');
     filterAll = filterAll === "false" ? false : true;
 
-    // console.log(`title`, title);
-    // console.log(`typeof(title)`, typeof(title));
-    // console.log(`content`, content);
-    // console.log(`typeof(content)`, typeof(content));
-    // console.log(`tags`, tags);
-    // console.log(`typeof(tags)`, typeof(tags));
-    // console.log(`filterAll`, filterAll);
-    // console.log(`typeof(filterAll)`, typeof(filterAll));
 
 
     let filteredPosts = [...posts];
@@ -105,11 +98,49 @@ const show = (req, res) => {
 
 
 const create = (req, res) => {
-    res.json({
-        
-        description: `Creazione di un nuovo post`,
-        posts
-    });
+
+    // console.log(req.body);
+    const { title, content, image, tags } = req.body;
+
+    const elementsWithError = [];
+    if (!title || typeof(title) !== "string" || title.length <= 3) {
+        elementsWithError.push("title");
+    };
+    if (!image || typeof(image) !== "string") {
+        elementsWithError.push("image");
+    };
+    if (!tags || !Array.isArray(tags) || tags.length === 0) {
+        elementsWithError.push("tags");
+    };
+    if (elementsWithError.length) {
+        res
+            // * STATUS 400 (BAD REQUEST)
+            .status(400)
+            .json({
+                error: "400 Bad request",
+                message: "An error has occured with your request",
+                elementsWithError
+            });
+
+        return;
+    };
+
+    let maxId = 0;
+    for (const post of posts) {
+        if (post.id > maxId) maxId = post.id;
+    };
+    const newPost = { id: maxId + 1, title, content, image, tags };
+    posts.push(newPost);
+
+    // * REINVIO IL NUOVO POST PER METTERE A DISPOSIZIONE DEL CLIENT ANCHE L'ID (E EVENTUALI MANIPOAZIONI DEI DATI ESEGUITE QUI SUL SERVER)
+    res
+        // * STATUS 201 (CREATO CON SUCCESSO)
+        .status(201)
+        .json({
+            message: `Creazione di un nuovo post`,
+            // posts
+            newPost
+        });
 };
 
 
@@ -117,22 +148,58 @@ const create = (req, res) => {
 
 const update = (req, res) => {
     const id = parseInt(req.params.id);
-    const post = posts.find(post => post.id === id);
+    const originalPost = posts.find(post => post.id === id);
 
-    if (!post) {
+    if (!originalPost) {
         res
             .status(404)
             .json({
-                description: "Modifica totale del post " + id + " fallita: Post non trovato"
+                error: "404 Not found",
+                message: "Modifica totale del post " + id + " fallita: Post non trovato"
             });
             
         return;
     };
 
+    const { title, content, image, tags } = req.body;
+    // * ES: NULL-COALESCING OPERATOR
+    // const title = title ? title : originalPost.title;
+    // const title = title ?? originalPost.title;
+    // const content = content ?? originalPost.content;
+    // const image = image ?? originalPost.image;
+    // const tags = tags ?? originalPost.tags;
+
+    const elementsWithError = [];
+    if (!title || typeof(title) !== "string" || title.length <= 3) {
+        elementsWithError.push("title");
+    };
+    if (!image || typeof(image) !== "string") {
+        elementsWithError.push("image");
+    };
+    if (!tags || !Array.isArray(tags) || tags.length === 0) {
+        elementsWithError.push("tags");
+    };
+    if (elementsWithError.length) {
+        res
+            // * STATUS 400 (BAD REQUEST)
+            .status(400)
+            .json({
+                error: "400 Bad request",
+                message: "An error has occured with your request",
+                elementsWithError
+            });
+
+        return;
+    };
+
+    const updatedPost = { id, title, content, image, tags };
+    // posts[posts.indexOf(post)] = updatedPost;
+    posts.splice(posts.indexOf(originalPost), 1, updatedPost);
+
     res.json({
-        
-        description: `Modifica totale del post ${id}`,
-        posts
+        message: `Modifica totale del post ${id}`,
+        // posts
+        updatedPost
     });
 };
 
@@ -141,22 +208,56 @@ const update = (req, res) => {
 
 const modify = (req, res) => {
     const id = parseInt(req.params.id);
-    const post = posts.find(post => post.id === id);
+    const originalPost = posts.find(post => post.id === id);
 
-    if (!post) {
+    if (!originalPost) {
         res
             .status(404)
             .json({
-                description: "Modifica parziale del post " + id + " fallita: Post non trovato"
+                error: "404 Not found",
+                message: "Modifica parziale del post " + id + " fallita: Post non trovato"
             });
             
         return;
     };
 
+    const { title, content, image, tags } = req.body;
+
+    const elementsWithError = [];
+    if (title && (typeof(title) !== "string" || title.length <= 3)) {
+        elementsWithError.push("title");
+    };
+    if (content && (typeof(content) !== "string")) {
+        elementsWithError.push("content");
+    };
+    if (image && (typeof(image) !== "string")) {
+        elementsWithError.push("image");
+    };
+    if (tags && (!Array.isArray(tags) || tags.length === 0)) {
+        elementsWithError.push("tags");
+    };
+    if (elementsWithError.length) {
+        res
+            // * STATUS 400 (BAD REQUEST)
+            .status(400)
+            .json({
+                error: "400 Bad request",
+                message: "An error has occured with your request",
+                elementsWithError
+            });
+
+        return;
+    };
+
+    if (title) originalPost.title = title;
+    if (content) originalPost.content = content;
+    if (image) originalPost.image = image;
+    if (tags) originalPost.tags = tags;
+
     res.json({
-        
-        description: `Modifica parziale del post ${id}`,
-        posts
+        message: `Modifica parziale del post ${id}`,
+        // posts
+        originalPost
     });
 };
 
@@ -179,7 +280,9 @@ const destroy = (req, res) => {
 
 
 
-    posts = posts.filter(post => post.id !== id);
+    // posts = posts.filter(post => post.id !== id);
+    // * MIGLIORE IN TERMINI COMPUTAZIONALI
+    posts.splice(posts.indexOf(post), 1);
     // console.log("posts DOPO LA RIMOZIONE:", posts);
 
     res
