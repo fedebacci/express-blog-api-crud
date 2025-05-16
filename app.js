@@ -58,8 +58,8 @@ app.use("/posts", postsRouter);
 
 
 // # ERROR HANDLING MIDDLEWARES
-app.use(errorsHandler);
 app.use(notFound);
+app.use(errorsHandler);
 
 
 

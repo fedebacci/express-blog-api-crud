@@ -1,4 +1,4 @@
-const notFound = (err, req, res, next) => {
+const notFound = (req, res, next) => {
     // console.log("ERR 404", err);
     console.log("MIDDLEWARE ERR 404");
     // next();
