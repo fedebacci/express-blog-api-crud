@@ -28,6 +28,7 @@ const app = express();
 
 const { appPort } = require('./data/db');
 const { postsRouter } = require('./routers/posts');
+const { errorsHandler } = require('./middlewares/errorsHandler');
 
 
 
@@ -50,6 +51,13 @@ app.use(express.json());
 
 // # ROUTERS
 app.use("/posts", postsRouter);
+
+
+
+
+
+// # ERROR HANDLING MIDDLEWARES
+app.use(errorsHandler);
 
 
 

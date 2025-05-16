@@ -56,13 +56,17 @@ const index = (req, res) => {
     };
 
     if (filteredPosts.length === 0) {
-        res
-            .status(404)
-            .json({
-                description: "I filtri utilizzati escludono tutti i post. Prova a modificare i filtri e riprova"
-            });
+        // res
+        //     .status(404)
+        //     .json({
+        //         description: "I filtri utilizzati escludono tutti i post. Prova a modificare i filtri e riprova"
+        //     });
 
-        return;
+        // return;
+
+        const error = new Error(`I filtri utilizzati escludono tutti i post. Prova a modificare i filtri e riprova.`);
+        error.statusCode = 404;
+        throw error;
     }
 
     res.json({
@@ -79,17 +83,20 @@ const show = (req, res) => {
     const post = posts.find(post => post.id === id);
     
     if (!post) {
-        res
-            .status(404)
-            .json({
-                description: "Visualizzazione dettagli del post " + id + " fallita: Post non trovato"
-            });
+        // res
+        //     .status(404)
+        //     .json({
+        //         description: "Visualizzazione dettagli del post " + id + " fallita: Post non trovato"
+        //     });
 
-        return;
+        // return;
+
+        const error = new Error(`Visualizzazione dettagli del post ${id} fallita: Post non trovato`);
+        error.statusCode = 404;
+        throw error;
     };
 
     res.json({
-        
         description: `Visualizzazione dettagli del post ${id}`,
         posts
     });
@@ -113,16 +120,22 @@ const create = (req, res) => {
         elementsWithError.push("tags");
     };
     if (elementsWithError.length) {
-        res
-            // * STATUS 400 (BAD REQUEST)
-            .status(400)
-            .json({
-                error: "400 Bad request",
-                message: "An error has occured with your request",
-                elementsWithError
-            });
+        // res
+        //     // * STATUS 400 (BAD REQUEST)
+        //     .status(400)
+        //     .json({
+        //         error: "400 Bad request",
+        //         message: "An error has occured with your request",
+        //         elementsWithError
+        //     });
 
-        return;
+        // return;
+
+        const error = new Error(`An error has occured with your request`);
+        // * STATUS 400 (BAD REQUEST)
+        error.statusCode = 400;
+        error.data = elementsWithError;
+        throw error;
     };
 
     let maxId = 0;
@@ -180,16 +193,22 @@ const update = (req, res) => {
         elementsWithError.push("tags");
     };
     if (elementsWithError.length) {
-        res
-            // * STATUS 400 (BAD REQUEST)
-            .status(400)
-            .json({
-                error: "400 Bad request",
-                message: "An error has occured with your request",
-                elementsWithError
-            });
+        // res
+        //     // * STATUS 400 (BAD REQUEST)
+        //     .status(400)
+        //     .json({
+        //         error: "400 Bad request",
+        //         message: "An error has occured with your request",
+        //         elementsWithError
+        //     });
 
-        return;
+        // return;
+
+        const error = new Error(`An error has occured with your request`);
+        // * STATUS 400 (BAD REQUEST)
+        error.statusCode = 400;
+        error.data = elementsWithError;
+        throw error;
     };
 
     const updatedPost = { id, title, content, image, tags };
@@ -211,14 +230,14 @@ const modify = (req, res) => {
     const originalPost = posts.find(post => post.id === id);
 
     if (!originalPost) {
-        res
-            .status(404)
-            .json({
-                error: "404 Not found",
-                message: "Modifica parziale del post " + id + " fallita: Post non trovato"
-            });
+        // res
+        //     .status(404)
+        //     .json({
+        //         error: "404 Not found",
+        //         message: "Modifica parziale del post " + id + " fallita: Post non trovato"
+        //     });
             
-        return;
+        // return;
     };
 
     const { title, content, image, tags } = req.body;
@@ -237,16 +256,22 @@ const modify = (req, res) => {
         elementsWithError.push("tags");
     };
     if (elementsWithError.length) {
-        res
-            // * STATUS 400 (BAD REQUEST)
-            .status(400)
-            .json({
-                error: "400 Bad request",
-                message: "An error has occured with your request",
-                elementsWithError
-            });
+        // res
+        //     // * STATUS 400 (BAD REQUEST)
+        //     .status(400)
+        //     .json({
+        //         error: "400 Bad request",
+        //         message: "An error has occured with your request",
+        //         elementsWithError
+        //     });
 
-        return;
+        // return;
+
+        const error = new Error(`An error has occured with your request`);
+        // * STATUS 400 (BAD REQUEST)
+        error.statusCode = 400;
+        error.data = elementsWithError;
+        throw error;
     };
 
     if (title) originalPost.title = title;
@@ -269,13 +294,17 @@ const destroy = (req, res) => {
     const post = posts.find(post => post.id === id);
 
     if (!post) {
-        res
-            .status(404)
-            .json({
-                description: "Cancellazione del post " + id + " fallita: Post non trovato"
-            });
+        // res
+        //     .status(404)
+        //     .json({
+        //         description: "Cancellazione del post " + id + " fallita: Post non trovato"
+        //     });
             
-        return;
+        // return;
+
+        const error = new Error(`Cancellazione del post ${id} fallita: Post non trovato`);
+        error.statusCode = 404;
+        throw error;
     };
 
 
