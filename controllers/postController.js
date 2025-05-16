@@ -56,18 +56,10 @@ const index = (req, res) => {
     };
 
     if (filteredPosts.length === 0) {
-        // res
-        //     .status(404)
-        //     .json({
-        //         description: "I filtri utilizzati escludono tutti i post. Prova a modificare i filtri e riprova"
-        //     });
-
-        // return;
-
         const error = new Error(`I filtri utilizzati escludono tutti i post. Prova a modificare i filtri e riprova.`);
         error.statusCode = 404;
         throw error;
-    }
+    };
 
     res.json({
         
@@ -83,14 +75,6 @@ const show = (req, res) => {
     const post = posts.find(post => post.id === id);
     
     if (!post) {
-        // res
-        //     .status(404)
-        //     .json({
-        //         description: "Visualizzazione dettagli del post " + id + " fallita: Post non trovato"
-        //     });
-
-        // return;
-
         const error = new Error(`Visualizzazione dettagli del post ${id} fallita: Post non trovato`);
         error.statusCode = 404;
         throw error;
@@ -120,17 +104,6 @@ const create = (req, res) => {
         elementsWithError.push("tags");
     };
     if (elementsWithError.length) {
-        // res
-        //     // * STATUS 400 (BAD REQUEST)
-        //     .status(400)
-        //     .json({
-        //         error: "400 Bad request",
-        //         message: "An error has occured with your request",
-        //         elementsWithError
-        //     });
-
-        // return;
-
         const error = new Error(`An error has occured with your request`);
         // * STATUS 400 (BAD REQUEST)
         error.statusCode = 400;
@@ -164,14 +137,18 @@ const update = (req, res) => {
     const originalPost = posts.find(post => post.id === id);
 
     if (!originalPost) {
-        res
-            .status(404)
-            .json({
-                error: "404 Not found",
-                message: "Modifica totale del post " + id + " fallita: Post non trovato"
-            });
+        // res
+        //     .status(404)
+        //     .json({
+        //         error: "404 Not found",
+        //         message: "Modifica totale del post " + id + " fallita: Post non trovato"
+        //     });
             
-        return;
+        // return;
+
+        const error = new Error(`Modifica totale del post ${id} fallita: Post non trovato`);
+        error.statusCode = 404;
+        throw error;
     };
 
     const { title, content, image, tags } = req.body;
@@ -193,17 +170,6 @@ const update = (req, res) => {
         elementsWithError.push("tags");
     };
     if (elementsWithError.length) {
-        // res
-        //     // * STATUS 400 (BAD REQUEST)
-        //     .status(400)
-        //     .json({
-        //         error: "400 Bad request",
-        //         message: "An error has occured with your request",
-        //         elementsWithError
-        //     });
-
-        // return;
-
         const error = new Error(`An error has occured with your request`);
         // * STATUS 400 (BAD REQUEST)
         error.statusCode = 400;
@@ -238,6 +204,10 @@ const modify = (req, res) => {
         //     });
             
         // return;
+
+        const error = new Error(`Modifica parziale del post ${id} fallita: Post non trovato`);
+        error.statusCode = 404;
+        throw error;
     };
 
     const { title, content, image, tags } = req.body;
@@ -256,17 +226,6 @@ const modify = (req, res) => {
         elementsWithError.push("tags");
     };
     if (elementsWithError.length) {
-        // res
-        //     // * STATUS 400 (BAD REQUEST)
-        //     .status(400)
-        //     .json({
-        //         error: "400 Bad request",
-        //         message: "An error has occured with your request",
-        //         elementsWithError
-        //     });
-
-        // return;
-
         const error = new Error(`An error has occured with your request`);
         // * STATUS 400 (BAD REQUEST)
         error.statusCode = 400;
@@ -294,14 +253,6 @@ const destroy = (req, res) => {
     const post = posts.find(post => post.id === id);
 
     if (!post) {
-        // res
-        //     .status(404)
-        //     .json({
-        //         description: "Cancellazione del post " + id + " fallita: Post non trovato"
-        //     });
-            
-        // return;
-
         const error = new Error(`Cancellazione del post ${id} fallita: Post non trovato`);
         error.statusCode = 404;
         throw error;

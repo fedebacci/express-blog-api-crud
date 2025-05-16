@@ -11,7 +11,9 @@ const errorsHandler = (err, req, res, next) => {
         responseObject.data = err.data;
     };
     
-    console.log("ERROR HANDLER PARTITO: ", responseObject);
+    // console.log("ERROR HANDLER PARTITO: ", responseObject);
+    // console.log("ERROR HANDLER PARTITO: ", err);
+    console.log("ERROR HANDLER PARTITO: ");
 
     res
         .status(statusCode)
