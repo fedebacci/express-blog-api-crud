@@ -61,11 +61,12 @@ const index = (req, res) => {
         throw error;
     };
 
-    res.json({
-        
-        description: "Lista dei post",
-        posts: filteredPosts
-    });
+    res
+        .header('Access-Control-Allow-Origin', '*')
+        .json({   
+            description: "Lista dei post",
+            posts: filteredPosts
+        });
 };
 
 
@@ -80,10 +81,12 @@ const show = (req, res) => {
         throw error;
     };
 
-    res.json({
-        description: `Visualizzazione dettagli del post ${id}`,
-        posts
-    });
+    res
+        .header('Access-Control-Allow-Origin', '*')
+        .json({
+            description: `Visualizzazione dettagli del post ${id}`,
+            posts
+        });
 };
 
 
@@ -122,6 +125,7 @@ const create = (req, res) => {
     res
         // * STATUS 201 (CREATO CON SUCCESSO)
         .status(201)
+        .header('Access-Control-Allow-Origin', '*')
         .json({
             message: `Creazione di un nuovo post`,
             // posts
@@ -138,6 +142,7 @@ const update = (req, res) => {
 
     if (!originalPost) {
         // res
+        //     .header('Access-Control-Allow-Origin', '*')
         //     .status(404)
         //     .json({
         //         error: "404 Not found",
@@ -181,11 +186,13 @@ const update = (req, res) => {
     // posts[posts.indexOf(post)] = updatedPost;
     posts.splice(posts.indexOf(originalPost), 1, updatedPost);
 
-    res.json({
-        message: `Modifica totale del post ${id}`,
-        // posts
-        updatedPost
-    });
+    res
+        .header('Access-Control-Allow-Origin', '*')
+        .json({
+            message: `Modifica totale del post ${id}`,
+            // posts
+            updatedPost
+        });
 };
 
 
@@ -197,6 +204,7 @@ const modify = (req, res) => {
 
     if (!originalPost) {
         // res
+        //     .header('Access-Control-Allow-Origin', '*')
         //     .status(404)
         //     .json({
         //         error: "404 Not found",
@@ -238,11 +246,13 @@ const modify = (req, res) => {
     if (image) originalPost.image = image;
     if (tags) originalPost.tags = tags;
 
-    res.json({
-        message: `Modifica parziale del post ${id}`,
-        // posts
-        originalPost
-    });
+    res
+        .header('Access-Control-Allow-Origin', '*')
+        .json({
+            message: `Modifica parziale del post ${id}`,
+            // posts
+            originalPost
+        });
 };
 
 
@@ -269,6 +279,7 @@ const destroy = (req, res) => {
         // // * STATUS "OK (SENZA CONTENUTO)" perchè non ho contenuto da mostrare indietro
         // .status(204)
         // .send();
+        .header('Access-Control-Allow-Origin', '*')
         .json({
             description: "Cancellazione del post " + id + " riuscita",
             posts
