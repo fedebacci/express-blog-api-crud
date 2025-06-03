@@ -17,7 +17,7 @@ let { posts } = require('../data/db');
 
 
 const index = (req, res) => {
-
+    console.log('index')
     
     let { title, content, tags, filterAll } = req.query
     if (tags) tags = tags.split(', ');
@@ -62,7 +62,7 @@ const index = (req, res) => {
     };
 
     res
-        .header('Access-Control-Allow-Origin', '*')
+        // .header('Access-Control-Allow-Origin', '*')
         .json({   
             description: "Lista dei post",
             posts: filteredPosts
@@ -74,6 +74,8 @@ const index = (req, res) => {
 const show = (req, res) => {
     const id = parseInt(req.params.id);
     const post = posts.find(post => post.id === id);
+
+    console.log('show', post)
     
     if (!post) {
         const error = new Error(`Visualizzazione dettagli del post ${id} fallita: Post non trovato`);
@@ -82,10 +84,11 @@ const show = (req, res) => {
     };
 
     res
-        .header('Access-Control-Allow-Origin', '*')
+        // .header('Access-Control-Allow-Origin', '*')
         .json({
             description: `Visualizzazione dettagli del post ${id}`,
-            posts
+            // posts,
+            post
         });
 };
 
@@ -93,8 +96,10 @@ const show = (req, res) => {
 
 const create = (req, res) => {
 
+    
     // console.log(req.body);
     const { title, content, image, tags } = req.body;
+    console.log('create', req.body)
 
     const elementsWithError = [];
     if (!title || typeof(title) !== "string" || title.length <= 3) {
@@ -125,7 +130,7 @@ const create = (req, res) => {
     res
         // * STATUS 201 (CREATO CON SUCCESSO)
         .status(201)
-        .header('Access-Control-Allow-Origin', '*')
+        // .header('Access-Control-Allow-Origin', '*')
         .json({
             message: `Creazione di un nuovo post`,
             // posts
@@ -139,6 +144,7 @@ const create = (req, res) => {
 const update = (req, res) => {
     const id = parseInt(req.params.id);
     const originalPost = posts.find(post => post.id === id);
+    console.log('update', originalPost)
 
     if (!originalPost) {
         // res
@@ -187,7 +193,7 @@ const update = (req, res) => {
     posts.splice(posts.indexOf(originalPost), 1, updatedPost);
 
     res
-        .header('Access-Control-Allow-Origin', '*')
+        // .header('Access-Control-Allow-Origin', '*')
         .json({
             message: `Modifica totale del post ${id}`,
             // posts
@@ -201,21 +207,22 @@ const update = (req, res) => {
 const modify = (req, res) => {
     const id = parseInt(req.params.id);
     const originalPost = posts.find(post => post.id === id);
+    console.log('modify', originalPost)
 
     if (!originalPost) {
-        // res
-        //     .header('Access-Control-Allow-Origin', '*')
-        //     .status(404)
-        //     .json({
-        //         error: "404 Not found",
-        //         message: "Modifica parziale del post " + id + " fallita: Post non trovato"
-        //     });
+        res
+            // .header('Access-Control-Allow-Origin', '*')
+            .status(404)
+            .json({
+                error: "404 Not found",
+                message: "Modifica parziale del post " + id + " fallita: Post non trovato"
+            });
             
-        // return;
+        return;
 
-        const error = new Error(`Modifica parziale del post ${id} fallita: Post non trovato`);
-        error.statusCode = 404;
-        throw error;
+        // const error = new Error(`Modifica parziale del post ${id} fallita: Post non trovato`);
+        // error.statusCode = 404;
+        // throw error;
     };
 
     const { title, content, image, tags } = req.body;
@@ -247,7 +254,7 @@ const modify = (req, res) => {
     if (tags) originalPost.tags = tags;
 
     res
-        .header('Access-Control-Allow-Origin', '*')
+        // .header('Access-Control-Allow-Origin', '*')
         .json({
             message: `Modifica parziale del post ${id}`,
             // posts
@@ -261,6 +268,9 @@ const modify = (req, res) => {
 const destroy = (req, res) => {
     const id = parseInt(req.params.id);
     const post = posts.find(post => post.id === id);
+
+
+    console.log('delete', post)
 
     if (!post) {
         const error = new Error(`Cancellazione del post ${id} fallita: Post non trovato`);
@@ -279,7 +289,7 @@ const destroy = (req, res) => {
         // // * STATUS "OK (SENZA CONTENUTO)" perchè non ho contenuto da mostrare indietro
         // .status(204)
         // .send();
-        .header('Access-Control-Allow-Origin', '*')
+        // .header('Access-Control-Allow-Origin', '*')
         .json({
             description: "Cancellazione del post " + id + " riuscita",
             posts

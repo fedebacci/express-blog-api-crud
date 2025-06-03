@@ -16,6 +16,7 @@ const errorsHandler = (err, req, res, next) => {
     console.log("ERROR HANDLER PARTITO: ");
 
     res
+    // .header('Access-Control-Allow-Origin', '*')
         .status(statusCode)
         .json(responseObject);
 };

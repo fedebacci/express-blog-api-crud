@@ -31,7 +31,7 @@ const { postsRouter } = require('./routers/posts');
 const { errorsHandler } = require('./middlewares/errorsHandler');
 const { notFound } = require('./middlewares/notFound');
 
-
+const cors = require('cors');
 
 
 
@@ -46,6 +46,12 @@ app.use(express.static('public'))
 // * NB: OGNI TIPO DI DECODIFICA HA IL SUO MIDDLEWARE, DA AGGIUNGERE SE NECESSARIO
 app.use(express.json());
 
+
+const corsConfig = {
+    // origin: "http://localhost:5173"
+    origin: "*"
+}
+app.use(cors(corsConfig))
 
 
 
